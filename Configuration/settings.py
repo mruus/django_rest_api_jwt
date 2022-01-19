@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # Extra packages
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
 
     # Extar apps
     'Auth',
@@ -128,8 +129,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIR = [
-    BASE_DIR / 'Static'
+STATICFILES_DIRS  = [
+    BASE_DIR / 'static'
 ]
 
 # Default primary key field type
@@ -138,3 +139,13 @@ STATICFILES_DIR = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

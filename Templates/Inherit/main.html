@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,5 +9,25 @@
 </head>
 <body>
     {% block bodyData%} {% endblock %}
+
+    <script src={% static 'Scripts/Extra/script.js' %}></script>
+    <script>
+        let BASE_URL = 'http://127.0.0.1:8000/'
+
+        function getCookie(cName) {
+            const name = cName + "=";
+            const cDecoded = decodeURIComponent(document.cookie); //to be careful
+            const cArr = cDecoded .split('; ');
+            let res;
+            cArr.forEach(val => {
+                if (val.indexOf(name) === 0) res = val.substring(name.length);
+            })
+            return res;
+      }
+      console.log(getCookie('Tokenkey'))
+
+      getCookie('Tokenkey') !=  undefined? console.log("User is in") : console.log("User is out");
+    </script>
+    {% block scriptData %} {% endblock %}
 </body>
 </html>

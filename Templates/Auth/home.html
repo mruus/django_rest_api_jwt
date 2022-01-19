@@ -1,0 +1,12 @@
+{% extends '../Inherit/main.html' %}
+{% load static %}
+
+{% block bodyData%}
+<h1>{{ Response }}</h1>
+<button type="button" id="logout">Logout</button>
+{% endblock %}
+
+
+{% block scriptData %}
+<script src={% static 'Scripts/Auth/auth.js' %}></script>
+{% endblock %}

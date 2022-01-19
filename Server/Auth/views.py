@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from . import serializers
 from Auth.models import AuthUsers
+import jwt
+import datetime
 
 
 @api_view(['POST'])
@@ -11,31 +13,44 @@ def AuthLogin(request):
         emailPost = request.POST.get('email')
         passwordPost = request.POST.get('password')
 
-        try:
-            user = AuthUsers.objects.get(
-                email=emailPost, password=passwordPost)
-            serializeData = serializers.AuthUsersSerializer(user)
-            data = {
-                'Error': False,
-                'Data': serializeData.data
-            }
-            return Response(data)
+        user = AuthUsers.objects.get(
+            email=emailPost, password=passwordPost)
 
-        except AuthUsers.DoesNotExist:
-            data = {
-                'Error': True,
-                'Data': "User Does Not Exist"
+        if user is not None:
+            serializeData = serializers.AuthUsersSerializer(user)
+
+            # init token
+            payload = {
+                'id': user.id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                'iat': datetime.datetime.utcnow()
             }
-            return Response(data)
+
+            token = jwt.encode(payload, 'secret', algorithm='HS256')
+
+            # instance of Response
+            response = Response()
+
+            # set cookie for the token
+            response.set_cookie(key='TokenKey', value=token)
+
+            response.data = {
+                'Error': False,
+                'Data': serializeData.data,
+                'Token': token
+            }
+            return response
+
+        data = {
+            'Error': True,
+            'Data': "User Does Not Exist"
+        }
+        return Response(data)
 
 
 @api_view(['POST'])
 def AuthRegister(request):
     if request.method == 'POST':
-        namePost = request.POST.get('name')
-        emailPost = request.POST.get('email')
-        passwordPost = request.POST.get('password')
-
         serializeData = serializers.AuthUsersSerializer(data=request.data)
 
         if serializeData.is_valid():
@@ -51,6 +66,42 @@ def AuthRegister(request):
         }
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['GET'])
+def GetToken(request):
+    if request.method == "GET":
+        # fetch cookie
+        tokenCookie = request.COOKIES.get('TokenKey')
+    
+        if tokenCookie is not None:
+            tokenDecode = jwt.decode(
+                tokenCookie, "secret", algorithms=["HS256"])
+
+            return Response({
+                'Error': False,
+                'Token': tokenCookie,
+                'Data': tokenDecode
+            })
+        else:
+            return Response({
+                'Error': True,
+                'Token': '',
+                'Data': ''
+            })
+
+
+@api_view(['GET'])
+def AuthLogout(request):
+    response = Response()
+
+    response.delete_cookie('TokenKey')
+
+    response.data = {
+        'Error': False,
+        'Data':  'Cookie Has Been Destroyed'
+    }
+
+    return response
 
 # @api_view(['GET', 'POST'])
 # def AuthUser_(request):
