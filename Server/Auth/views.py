@@ -13,10 +13,9 @@ def AuthLogin(request):
         emailPost = request.POST.get('email')
         passwordPost = request.POST.get('password')
 
-        user = AuthUsers.objects.get(
+        try:    
+            user = AuthUsers.objects.get(
             email=emailPost, password=passwordPost)
-
-        if user is not None:
             serializeData = serializers.AuthUsersSerializer(user)
 
             # init token
@@ -41,11 +40,12 @@ def AuthLogin(request):
             }
             return response
 
-        data = {
-            'Error': True,
-            'Data': "User Does Not Exist"
-        }
-        return Response(data)
+        except Exception as e:
+            data = {
+                'Error': True,
+                'Data': "User Does Not Exist"
+            }
+            return Response(data)
 
 
 @api_view(['POST'])
