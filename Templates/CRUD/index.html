@@ -13,19 +13,13 @@
 {% block bodyData %}
 <div class="container w-55">
     <form id="crudForm" class="w-100 mb-5">
+        <input type="hidden" name="ID" id="ID" />
         <div class="row">
             
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">@</span>
-                    <input type="text" class="form-control" required placeholder="First name" name="FirstName" id="FirstName" aria-label="First Name" aria-describedby="basic-addon1">
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">@</span>
-                    <input type="text" class="form-control" required placeholder="Last name" name="LastName"  id="LastName" aria-label="Last Name" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" required placeholder="Name" name="Name" id="Name" aria-label="First Name" aria-describedby="basic-addon1">
                 </div>
             </div>
         </div>
@@ -57,7 +51,7 @@
             <div class="col-md-6">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">@</span>
-                    <input type="text" class="form-control"  required placeholder="Password" name="Password" id="Password" aria-label="Password" aria-describedby="basic-addon1">
+                    <input type="password" class="form-control"  required placeholder="Password" name="Password" id="Password" aria-label="Password" aria-describedby="basic-addon1">
                 </div>
             </div>
         </div>

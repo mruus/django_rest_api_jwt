@@ -1,19 +1,32 @@
 GetAllAccounts();
 
+let insertionType = "Insert";
+
 $("#crudForm").on("submit", function (e) {
   e.preventDefault();
 
+  let methodType, URL_Link;
+
   let formData = new FormData();
 
-  formData.append("Name", $("#FirstName").val() + " " + $("#LastName").val());
+  formData.append("Name", $("#Name").val());
   formData.append("Email", $("#Email").val());
   formData.append("Phone", $("#Phone").val());
   formData.append("Username", $("#Username").val());
   formData.append("Password", $("#Password").val());
 
+  if (insertionType == "Insert") {
+    methodType = "POST";
+    URL_Link = BASE_URL + "API/CRUD/crud_noid";
+  } else {
+    const ID = $("#ID").val();
+    methodType = "PUT";
+    URL_Link = BASE_URL + `API/CRUD/crud_id/` + ID + ``;
+  }
+
   $.ajax({
-    method: "POST",
-    url: BASE_URL + "API/CRUD/crud_noid",
+    method: methodType,
+    url: URL_Link,
     processData: false,
     contentType: false,
     data: formData,
@@ -24,6 +37,8 @@ $("#crudForm").on("submit", function (e) {
       }
 
       GetAllAccounts();
+      insertionType = "Insert";
+      $("#crudForm").trigger("reset");
     },
     error: function (error) {
       console.log(error);
@@ -31,9 +46,48 @@ $("#crudForm").on("submit", function (e) {
   });
 });
 
-$("#accountsTable").on("click", "tbody .delete", function () {
+$("#accountsTable tbody").on("click", ".delete", function () {
   const ID = $(this).attr("delete");
-  alert("Delete Account" , ID);
+
+  if (confirm("Are you sure you want to delete")) {
+    $.ajax({
+      method: "DELETE",
+      url: BASE_URL + `API/CRUD/crud_id/` + ID + ``,
+      async: false,
+      success: function (data) {
+        if (!data.isError) {
+          GetAllAccounts();
+        }
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  }
+});
+$("#accountsTable tbody").on("click", ".edit", function () {
+  const ID = $(this).attr("edit");
+
+  $.ajax({
+    method: "GET",
+    url: BASE_URL + `API/CRUD/crud_id/` + ID + ``,
+    async: false,
+    success: function (data) {
+      if (!data.isError) {
+        $("#Name").val(data.Message.Name);
+        $("#Email").val(data.Message.Email);
+        $("#Phone").val(data.Message.Phone);
+        $("#Username").val(data.Message.Username);
+        $("#Password").val(data.Message.Password);
+        $("#ID").val(data.Message.id);
+
+        insertionType = "Update";
+      }
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
 });
 
 function GetAllAccounts() {
