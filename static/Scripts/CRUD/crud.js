@@ -100,6 +100,8 @@ function GetAllAccounts() {
       if (!data.isError) {
         rows = data.Message;
       }
+
+      console.log(data);
     },
     error: function (error) {
       console.log(error);
