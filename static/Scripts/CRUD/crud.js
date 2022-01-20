@@ -34,11 +34,10 @@ $("#crudForm").on("submit", function (e) {
     success: function (data) {
       if (!data.isError) {
         rows = data.Message;
+        GetAllAccounts();
+        insertionType = "Insert";
+        $("#crudForm").trigger("reset");
       }
-
-      GetAllAccounts();
-      insertionType = "Insert";
-      $("#crudForm").trigger("reset");
     },
     error: function (error) {
       console.log(error);
@@ -65,6 +64,7 @@ $("#accountsTable tbody").on("click", ".delete", function () {
     });
   }
 });
+
 $("#accountsTable tbody").on("click", ".edit", function () {
   const ID = $(this).attr("edit");
 
@@ -137,7 +137,7 @@ function GetAllAccounts() {
     </tr>
         `;
     }
-
-    $("#accountsTable tbody").html(rData);
   }
+
+  $("#accountsTable tbody").html(rData);
 }
