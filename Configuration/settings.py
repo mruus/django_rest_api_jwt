@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # Extar apps
     'Auth',
+    'CRUD',
 ]
 
 MIDDLEWARE = [
@@ -130,7 +131,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS  = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'Static'
 ]
 
 # Default primary key field type
